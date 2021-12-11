@@ -36,6 +36,7 @@ def success(request):
     if 'user_id' not in request.session:
         return redirect('/')
     user = User.objects.get(id=request.session['user_id'])
+    books = user.books_uploaded.all()
     context = {
         'user':user
     }
