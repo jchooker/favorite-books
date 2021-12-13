@@ -7,7 +7,7 @@
 #wrapper {
     width: 980px;
     min-height: 400px;
-    padding: 20px 0 0 0;
+    padding: 20px 0 30px 0;
     display: flex;
     justify-content: center;
     margin: 0 auto;
@@ -15,11 +15,16 @@
     border-radius: 10px;
 }
 
+
 #left-side {
     width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.error-msg {
+    color: red;
 }
 
 #right-side {
@@ -37,11 +42,26 @@
     margin-top: 10px;
 }
 
+#wrapper2 {
+    width: 980px;
+    min-height: 400px;
+    padding: 20px 0 30px 0;
+    margin: 0 auto;
+    background-color: antiquewhite;
+    border-radius: 10px;
+}
+
 #header-area {
     width: 950px;
     display: flex;
     justify-content: space-between;
     border-bottom: 2px solid greenyellow;
+}
+
+#middle-section2 {
+    width: 980px;
+    display: flex;
+    flex-direction: row;
 }
 
 #left-side2 {

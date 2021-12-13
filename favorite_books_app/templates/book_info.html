@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
 </head>
 <body>
-    <div id="wrapper">
+    <div id="wrapper3">
         <h1>Welcome, {{user.first_name}}!</h1>
         <div id="left-side3">
             <h2>Add a Favorite Book</h2>
@@ -51,6 +51,10 @@
                     <input type="password" id="pw2" name="pw2">
                 </div>
             </form>
+            <!-- {{book.uploaded_by.first_name}}
+            {% for user in book.users_who_like.all %} 
+            {{user.first_name}}
+            {{book.users_who_like.first_name}} -->
         </div>
     </div>
     

@@ -1,13 +1,14 @@
 import bcrypt
 from django.db import models
 import re
-
-from django.db.models.deletion import CASCADE
+from favorite_books_app.utils import *
 
 
 class UserManager(models.Manager):
     def user_validator(self, postData):
         errors = {}
+        if User.objects.filter(email=postData['email']):
+            errors['duplicate_email'] = "There is already a user registered with that email address"
         if len(postData['first_name']) < 2:
             errors['first_name_length'] = "Please provide a valid first name (two characters or more)"
         if len(postData['last_name']) < 2:
@@ -33,6 +34,9 @@ class UserManager(models.Manager):
             errors['bad_title'] = "Please provide a book title of proper length"
         if len(postData['desc']) < 5:
             errors['short_description'] = "Please provide a book description of more than four characters"
+        if Book.objects.filter(title__icontains=postData['title']):
+            errors['duplicate_book'] = "This title is already included in this collection"
+        #check for whether user tries to enter duplicate book title (take into account capitalization? regex style?)
         return errors
 
 class User(models.Model):
@@ -42,11 +46,13 @@ class User(models.Model):
     pw = models.CharField(max_length = 40)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now= True)
+    objects = UserManager()
 
 class Book(models.Model):
     title = models.CharField(max_length = 100)
     desc = models.TextField(null=True)
-    uploaded_by = models.ForeignKey(User, related_name="books_uploaded", on_delete = CASCADE, null=True)
+    uploaded_by = models.ForeignKey(User, related_name="books_uploaded", on_delete = models.CASCADE, null=True)
     users_who_like = models.ManyToManyField(User, related_name="liked_books")
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now= True)
+    objects = UserManager()

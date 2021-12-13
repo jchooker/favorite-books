@@ -13,7 +13,16 @@
     <div id="wrapper">
         <div id="left-side">
             <h1>Registration</h1>
-            <form action="/register" method="POST">
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                {% if 'reg' in message.tags %}
+                <li class="error-msg">{{message}}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form action="/reg_attempt" method="POST">
                 {% csrf_token %}
                 <div class="label-input row">
                     <label for="first_name" class="col">First Name</label>
@@ -42,7 +51,16 @@
         </div>
         <div id="right-side">
             <h1>Login</h1>
-            <form action="/login/{{user.id}}">
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                {% if 'log' in message.tags %}
+                <li class="error-msg">{{message}}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form action="/books">
                 {% csrf_token %}
                 <div class="label-input row">
                     <label for="email2" class="col">Email</label>

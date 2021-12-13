@@ -10,9 +10,10 @@ def index(request):
 def reg_attempt(request):
     if request.method == 'POST':
         errors = User.objects.user_validator(request.POST) 
-        if len(errors) > 0:
+        if errors:
             for key, value in errors.items():
                 messages.error(request, value, extra_tags="reg")
+            return redirect('/')
         temp_pw = request.POST["pw"]
         pw_hash = bcrypt.hashpw(temp_pw.encode(), bcrypt.gensalt()).decode()
         User.objects.create(
@@ -21,26 +22,62 @@ def reg_attempt(request):
         email = request.POST['email'],
         pw = pw_hash
         )
-        return redirect('/success')
+        request.session['user_id']=User.objects.last().id
+        return redirect('/books')
     else:
         return redirect('/')
 
 def login_attempt(request):
     if request.method == 'POST':
         errors = User.objects.login_validator(request.POST)
-    context = {
-    }
-    return redirect('/success')
+        if errors:
+            for key, value in errors.items():
+                messages.error(request, value, extra_tags="log")
+            return redirect('/')
+        user = User.objects.get(email=request.POST['email2'])
+        request.session['user_id'] = user.id
+        # request.session['']
+    else:
+        return redirect('/')
+    return redirect('/books')
 
 def success(request):
     if 'user_id' not in request.session:
         return redirect('/')
-    user = User.objects.get(id=request.session['user_id'])
-    books = user.books_uploaded.all()
+    # user = User.objects.get(id=request.session['user_id'])
+    # books = user.books_uploaded.all()
     context = {
-        'user':user
+        'user':User.objects.get(id=request.session['user_id']),
+        'books':Book.objects.all()
     }
     return render(request, "user_landing.html", context)
+
+def add_book(request):
+    if request.method == 'POST':
+        errors = Book.objects.book_validator(request.POST)
+        if errors:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect('/books')
+        # book = Book.objects.get(title=request.POST['title'])
+        user = User.objects.get(id=request.session['user_id'])
+        book = Book.objects.create(
+        title = request.POST['title'],
+        desc = request.POST['desc'],
+        uploaded_by = user
+        )
+        book.users_who_like.add(user)
+        # request.session['book_id'] = book.id
+        return redirect(f'/books/{id}')
+    else:
+        return redirect('/books')
+
+def book_info(request, book_id):
+    context = {
+        'book':Book.objects.get(id=book_id),
+        'users':User.objects.all()
+    }
+    return render(request, "book_info.html", context)
 
 def log_out(request):
     request.session.flush()

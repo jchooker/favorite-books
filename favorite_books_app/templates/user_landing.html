@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
 </head>
 <body>
-    <div id="wrapper">
+    <div id="wrapper2">
         <div id="header-area">
             <h1>Welcome, {{user.first_name}}!</h1>
             <form method="POST">
@@ -18,34 +18,43 @@
                 <a href="/log_out">Log Out</a>
             </form>
         </div>
-        <div id="left-side2">
-            <h2>Add a Favorite Book</h2>
-            <form action="" method="POST"> 
-                {% csrf_token %}
-                <div class="label-input row">desc
-                    <label for="title" class="col">First Name</label>
-                    <input type="text" id="title" name="title" class="form-control col">
-                </div>
-                <div class="label-input row">
-                    <label for="desc" class="col">Last Name</label>
-                    <textarea type="text" id="desc" name="desc" class="form-control col"></textarea>
-                <div class="d-flex justify-content-start">
-                    <button class="btn btn-primary">Register</button>
-                </div>
-            </form>
-        </div>
-        <div id="right-side2">
-            <h2>All Books</h2>
-            {% for book in books %}
-            <form method="POST">
-                {% csrf_token %}
-                <a href="#">{{book.title}}</a>
-            </form>
-            <p>(added by {{book.uploaded_by}})</p>
-            {% if --- %}
-            <p></p>
-            {% endif %}
-            {% endfor %}
+        <div id="middle-section2">
+            <div id="left-side2">
+                <h2>Add a Favorite Book</h2>
+                <form action="/add_book" method="POST"> 
+                    {% csrf_token %}
+                    <div class="label-input row">
+                        <label for="title" class="col">Title</label>
+                        <input type="text" id="title" name="title" class="form-control col">
+                    </div>
+                    <div class="label-input row">
+                        <label for="desc" class="col">Description</label>
+                        <textarea type="text" id="desc" name="desc" class="form-control col"></textarea>
+                    <div class="d-flex justify-content-start">
+                        <button class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+            </div>
+            <div id="right-side2">
+                <h2>All Books</h2>
+                <ul>
+                    {% for book in books %}
+                    <li><form method="POST">
+                        {% csrf_token %}
+                        <a href="#">{{book.title}}</a>
+                    </form></li>
+                    <li><p>(added by {{book.uploaded_by}})</p></li>
+                    {% if book in user.liked_books.all %}
+                    <li><p class="fst-italic">This is one of your favorites</p></li>
+                    {% else %}
+                    <li><form method="POST">
+                        {% csrf_token %}
+                        <a href="#">Add book to favorites</a>
+                    </form></li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
     
