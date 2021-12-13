@@ -79,6 +79,20 @@ def book_info(request, book_id):
     }
     return render(request, "book_info.html", context)
 
+def favorite(request, book_id):
+    user = User.objects.get(id=request.session["user_id"])
+    book = Book.objects.get(id=book_id)
+    user.favorited_books.add(book)
+
+    return redirect(f'/books/{book_id}')
+
+def unfavorite(request, book_id):
+    user = User.objects.get(id=request.session["user_id"])
+    book = Book.objects.get(id=book_id)
+    user.favorited_books.remove(book)
+
+    return redirect(f'/books/{book_id}')
+
 def log_out(request):
     request.session.flush()
     return redirect('/')
