@@ -14,43 +14,21 @@
         <h1>Welcome, {{user.first_name}}!</h1>
         <div id="left-side3">
             <h2>Add a Favorite Book</h2>
-            <form action="/register" method="POST">
-                {% csrf_token %}
-                <div class="label-input row">
-                    <label for="first_name" class="col">First Name</label>
-                    <input type="text" id="first_name" name="first_name" class="form-control col">
-                </div>
-                <div class="label-input row">
-                    <label for="last_name" class="col">Last Name</label>
-                    <input type="text" id="last_nam" name="last_name" class="form-control col">
-                </div>
-                <div class="label-input row">
-                    <label for="email" class="col">Email</label>
-                    <input type="email" id="email" name="email" class="form-control col">
-                </div>
-                <div class="label-input row">
-                    <label for="pw" class="col">Password</label>
-                    <input type="password" id="pw" name="pw" class="form-control col">
-                </div>
-                <div class="label-input row">
-                    <label for="pw_conf" class="col">Confirm Password</label>
-                    <input type="password" id="pw_conf" name="pw_conf" class="form-control col">
-                </div>
-            </form>
+            <ul>
+                <li><p>Added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}}</p></li>
+                <li><p>Added on: {{created_at}}</p></li>
+                <li><p>Last updated on: {{updated_at}}</p></li>
+                <li><p>Description: {{book.desc}}</p></li>
+            </ul>
         </div>
         <div id="right-side3">
-            <h1>Login</h1>
-            <form action="/login/{{user.id}}">
-                {% csrf_token %}
-                <div class="label-input">
-                    <label for="email2">Email</label>
-                    <input type="email" id="email2" name="email2">
-                </div>
-                <div class='label-input'>
-                    <label for="pw2">Password</label>
-                    <input type="password" id="pw2" name="pw2">
-                </div>
-            </form>
+            <h2>Users Who Like This Book</h2>
+            <ul>
+                {% for user1 in books.users_who_like.all %}
+                <li>{{user1.first_name}} {{user1.last_name}}</li>
+                {% endfor %}
+            </ul>
+            <a href="#">Add to Favorites</a>
             <!-- {{book.uploaded_by.first_name}}
             {% for user in book.users_who_like.all %} 
             {{user.first_name}}

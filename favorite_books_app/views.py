@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import *
 import bcrypt
+from time import localtime, strftime
 
 # Create your views here.
 def index(request):
@@ -73,9 +74,13 @@ def add_book(request):
         return redirect('/books')
 
 def book_info(request, book_id):
+    book = Book.objects.get(id=book_id)
+    users = User.objects.all()
     context = {
-        'book':Book.objects.get(id=book_id),
-        'users':User.objects.all()
+        'book': book,
+        'users': users,
+        'created_at': book.created_at.strftime("%b %d, %Y: %p", localtime()),
+        'updated_at': book.updated_at.strftime("%b %d, %Y: %p", localtime())
     }
     return render(request, "book_info.html", context)
 
