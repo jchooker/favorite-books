@@ -29,6 +29,7 @@ def reg_attempt(request):
         return redirect('/')
 
 def login_attempt(request):
+    print("NEW TEST")
     if request.method == 'POST':
         errors = User.objects.login_validator(request.POST)
         if errors:
@@ -37,6 +38,7 @@ def login_attempt(request):
             return redirect('/')
         user = User.objects.get(email=request.POST['email2'])
         request.session['user_id'] = user.id
+        print(request.session['user_id'])
         # request.session['']
     else:
         return redirect('/')
@@ -44,6 +46,7 @@ def login_attempt(request):
 
 def success(request):
     if 'user_id' not in request.session:
+        messages.error(request, "TEST")
         return redirect('/')
     # user = User.objects.get(id=request.session['user_id'])
     # books = user.books_uploaded.all()

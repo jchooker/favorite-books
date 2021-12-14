@@ -41,15 +41,15 @@
                     {% for book in books %}
                     <li><form method="POST">
                         {% csrf_token %}
-                        <a href="#">{{book.title}}</a>
+                        <a href="/books/{{book.id}}">{{book.title}}</a>
                     </form></li>
-                    <li><p>(added by {{book.uploaded_by}})</p></li>
+                    <li><p>(added by {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}})</p></li>
                     {% if book in user.liked_books.all %}
                     <li><p class="fst-italic">This is one of your favorites</p></li>
                     {% else %}
                     <li><form method="POST">
                         {% csrf_token %}
-                        <a href="#">Add book to favorites</a>
+                        <a href="/add_book">Add book to favorites</a>
                     </form></li>
                     {% endif %}
                     {% endfor %}

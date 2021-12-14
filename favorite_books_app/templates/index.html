@@ -56,11 +56,13 @@
                 {% for message in messages %}
                 {% if 'log' in message.tags %}
                 <li class="error-msg">{{message}}</li>
+                {% else %}
+                <li>{{message}}</li>
                 {% endif %}
                 {% endfor %}
             </ul>
             {% endif %}
-            <form action="/books">
+            <form action="/login_attempt" method="POST">
                 {% csrf_token %}
                 <div class="label-input row">
                     <label for="email2" class="col">Email</label>

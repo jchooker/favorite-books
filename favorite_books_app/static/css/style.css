@@ -45,7 +45,7 @@
 #wrapper2 {
     width: 980px;
     min-height: 400px;
-    padding: 20px 0 30px 0;
+    padding: 20px 0 30px 20px;
     margin: 0 auto;
     background-color: antiquewhite;
     border-radius: 10px;
