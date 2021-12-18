@@ -41,6 +41,7 @@
                     {% for book in books %}
                     <li><form method="POST">
                         {% csrf_token %}
+                        <!-- <a href="/books/{{book.book_id}}">{{book.title}}</a> -->
                         <a href="/books/{{book.id}}">{{book.title}}</a>
                     </form></li>
                     <li><p>(added by {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}})</p></li>

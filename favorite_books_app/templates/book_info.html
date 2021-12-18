@@ -11,28 +11,32 @@
 </head>
 <body>
     <div id="wrapper3">
-        <h1>Welcome, {{user.first_name}}!</h1>
-        <div id="left-side3">
-            <h2>Add a Favorite Book</h2>
-            <ul>
-                <li><p>Added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}}</p></li>
-                <li><p>Added on: {{created_at}}</p></li>
-                <li><p>Last updated on: {{updated_at}}</p></li>
-                <li><p>Description: {{book.desc}}</p></li>
-            </ul>
+        <div id="header-area3">
+            <h1>Welcome, {{user.first_name}}!</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <a href="/log_out">Log Out</a>
+            </form>
         </div>
-        <div id="right-side3">
-            <h2>Users Who Like This Book</h2>
-            <ul>
-                {% for user1 in books.users_who_like.all %}
-                <li>{{user1.first_name}} {{user1.last_name}}</li>
-                {% endfor %}
-            </ul>
-            <a href="#">Add to Favorites</a>
-            <!-- {{book.uploaded_by.first_name}}
-            {% for user in book.users_who_like.all %} 
-            {{user.first_name}}
-            {{book.users_who_like.first_name}} -->
+        <div id="middle-section3">
+            <div id="left-side3">
+                <h2>{{book.title}}</h2>
+                <ul>
+                    <li><p>Added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}}</p></li>
+                    <li><p>Added on: {{created_at}}</p></li>
+                    <li><p>Last updated on: {{updated_at}}</p></li>
+                    <li><p>Description: {{book.desc}}</p></li>
+                </ul>
+            </div>
+            <div id="right-side3">
+                <h2>Users Who Like This Book</h2>
+                <ul>
+                    {% for user1 in books.users_who_like.all %}
+                    <li>{{user1.first_name}} {{user1.last_name}}</li>
+                    {% endfor %}
+                </ul>
+                <a href="#">Add to Favorites</a>
+            </div>
         </div>
     </div>
     

@@ -3,8 +3,15 @@ from django.contrib import messages
 from .models import *
 import bcrypt
 from time import localtime, strftime
+from datetime import datetime
 
 # Create your views here.
+def curr_user(request):
+    return User.objects.get(id=request.session['user_id'])
+
+def curr_book(request, book_id):
+    return Book.objects.get(id=book_id)
+
 def index(request):
     return render(request, 'index.html')
 
@@ -51,7 +58,7 @@ def success(request):
     # user = User.objects.get(id=request.session['user_id'])
     # books = user.books_uploaded.all()
     context = {
-        'user':User.objects.get(id=request.session['user_id']),
+        'user':curr_user(request),
         'books':Book.objects.all()
     }
     return render(request, "user_landing.html", context)
@@ -64,7 +71,7 @@ def add_book(request):
                 messages.error(request, value)
             return redirect('/books')
         # book = Book.objects.get(title=request.POST['title'])
-        user = User.objects.get(id=request.session['user_id'])
+        user = curr_user(request)
         book = Book.objects.create(
         title = request.POST['title'],
         desc = request.POST['desc'],
@@ -72,31 +79,42 @@ def add_book(request):
         )
         book.users_who_like.add(user)
         # request.session['book_id'] = book.id
-        return redirect(f'/books/{id}')
+        return redirect(f'/books/{book.id}')
     else:
         return redirect('/books')
 
 def book_info(request, book_id):
-    book = Book.objects.get(id=book_id)
-    users = User.objects.all()
+    book = curr_book(request, book_id)
+    user = curr_user(request)
+    cr_at = book.created_at.strftime("%b %d, %Y: %H:%M %p")
+    up_at = book.updated_at.strftime("%b %d, %Y: %H:%M %p")
     context = {
         'book': book,
-        'users': users,
-        'created_at': book.created_at.strftime("%b %d, %Y: %p", localtime()),
-        'updated_at': book.updated_at.strftime("%b %d, %Y: %p", localtime())
+        'user': user,
+        'created_at': cr_at,
+        'updated_at': up_at
     }
+    if book.uploaded_by.id == request.session['user_id']:
+        return render(request, "book_info_admin.html", context)
     return render(request, "book_info.html", context)
 
+def update(request, book_id):
+    book = curr_book(request, book_id)
+    book.title = request.POST['re_title']
+    book.desc = request.POST['re_desc']
+    book.save()
+    return redirect(f'/books/{book_id}')
+
 def favorite(request, book_id):
-    user = User.objects.get(id=request.session["user_id"])
-    book = Book.objects.get(id=book_id)
+    user = curr_user(request)
+    book = curr_book(request, book_id)
     user.favorited_books.add(book)
 
     return redirect(f'/books/{book_id}')
 
 def unfavorite(request, book_id):
-    user = User.objects.get(id=request.session["user_id"])
-    book = Book.objects.get(id=book_id)
+    user = curr_user(request)
+    book = curr_book(request, book_id)
     user.favorited_books.remove(book)
 
     return redirect(f'/books/{book_id}')
